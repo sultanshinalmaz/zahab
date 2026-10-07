@@ -1,0 +1,46 @@
+# Сайт ZAHAB — статический: только HTML, CSS, JS, картинки и видео.
+
+# Главная — index.html (даже если на хостинге окажется чужой index.php)
+DirectoryIndex index.html
+
+# Список файлов папки не показываем
+Options -Indexes
+
+# Скрипты здесь не нужны и не выполняются: подброшенный .php не сработает
+<FilesMatch "\.(php[0-9]?|phtml|phar|pl|py|cgi|sh)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Служебные файлы с точкой (.git, состояние автозаливки) наружу не отдаём
+<FilesMatch "^\.">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+<IfModule mod_mime.c>
+  AddType video/mp4 .mp4
+  AddType font/woff2 .woff2
+  AddDefaultCharset utf-8
+</IfModule>
+
+# Кэш: страница, стили и скрипты всегда сверяются с сервером — правки видны сразу.
+# Картинки, шрифты и видео браузер хранит неделю: при замене фото даём файлу новое имя.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|css|js)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "\.(jpg|jpeg|png|webp|svg|woff2|mp4)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>

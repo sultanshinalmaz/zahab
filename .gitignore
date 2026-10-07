@@ -1,0 +1,8 @@
+# служебное — в репозиторий и на хостинг не идёт
+.claude/
+.vercel/
+node_modules/
+_backup/
+*.log
+.DS_Store
+Thumbs.db

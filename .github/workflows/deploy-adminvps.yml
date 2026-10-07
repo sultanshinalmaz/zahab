@@ -1,0 +1,82 @@
+# Выкладка сайта ZAHAB на хостинг AdminVPS (zahab-kama.ru).
+# После каждого изменения в ветке main GitHub сам заливает изменившиеся файлы по FTP —
+# вручную ничего загружать не нужно. Пока секреты FTP не заданы, сценарий ничего не делает и не падает.
+#
+# Секреты репозитория (Settings → Secrets and variables → Actions → Secrets) — вписывает владелец сам:
+#   FTP_SERVER      — адрес FTP-сервера из панели AdminVPS (ispmanager)
+#   FTP_USERNAME    — логин FTP-пользователя, у которого домашняя папка = папка нового сайта
+#   FTP_PASSWORD    — его пароль
+# Необязательные переменные (там же → Variables):
+#   SITE_URL        — адрес сайта, по умолчанию https://zahab-kama.ru
+#   FTP_DIR         — папка сайта относительно входа по FTP, по умолчанию ./
+#   FTP_PROTOCOL    — ftps (по умолчанию) или ftp, если хостинг не принимает шифрованное соединение
+name: Выкладка на AdminVPS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-adminvps
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SITE_URL: ${{ vars.SITE_URL || 'https://zahab-kama.ru' }}
+    steps:
+      - name: Проверка настроек
+        id: cfg
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        run: |
+          if [ -z "$FTP_SERVER" ]; then
+            echo "ready=no" >> "$GITHUB_OUTPUT"
+            echo "::notice::Секреты FTP не заданы — выкладка на хостинг пропущена"
+            exit 0
+          fi
+          echo "ready=yes" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.cfg.outputs.ready == 'yes'
+
+      # Стили и скрипты получают метку версии (?v=коммит): после правки браузеры и защита
+      # DDoS-Guard перед сайтом сразу берут новые файлы, а не держат старые в кэше.
+      - name: Метки версии для стилей и скриптов
+        if: steps.cfg.outputs.ready == 'yes'
+        run: |
+          V="${GITHUB_SHA::7}"
+          sed -i -E "s#((href|src)=\"assets/[^\"?]+\.(css|js))(\?v=[^\"]*)?\"#\1?v=$V\"#g" index.html
+          grep -oE '(href|src)="assets/[^"]+\?v=[^"]+"' index.html
+
+      - name: Заливка по FTP (только изменившиеся файлы)
+        if: steps.cfg.outputs.ready == 'yes'
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ${{ vars.FTP_PROTOCOL || 'ftps' }}
+          local-dir: ./
+          server-dir: ${{ vars.FTP_DIR || './' }}
+          # на хостинг уходит только сам сайт: служебные файлы разработки остаются в репозитории
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            .claude/**
+            README.md
+            dev-server.js
+
+      - name: Проверка сайта
+        if: steps.cfg.outputs.ready == 'yes'
+        continue-on-error: true
+        run: |
+          curl -fsS --max-time 20 -o /dev/null -w "Главная страница: %{http_code}\n" "$SITE_URL/"
+          curl -fsS --max-time 20 "$SITE_URL/" | grep -oE 'assets/js/app\.js\?v=[^"]+' || echo "::warning::На сайте пока не новая версия (домен ещё смотрит в старую папку?)"
