@@ -59,6 +59,7 @@ node dev-server.js
 | Вопросы и ответы | `faq.items[]` |
 | Точки на карте | `map.points[]` — название, город, координаты `lat`/`lon`, приближение `zoom` |
 | Фото в галерее | `gallery.items[]` |
+| Сертификаты и протоколы | `certificates.items[]` — название, номер, дата и листы (`pages`: скан + превью в `assets/img/docs/`) |
 | Предупреждение внизу сайта | `disclaimer` |
 | Заставка (фото и надписи) | `intro` + фон меняется в `index.html`: `.intro__photo { background-image: … }` |
 

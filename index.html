@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d0a07">
 <title>ZAHAB — сок пустынного трюфеля кам’а для глаз | прямой производитель</title>
-<meta name="description" content="Сок пустынного трюфеля кам’а ZAHAB: свежий отжим из дикого гриба Саудовской Аравии. Флакон 10 мл — курс 1–1,5 месяца. Заказ в WhatsApp и Telegram.">
+<meta name="description" content="Сок пустынного трюфеля кам’а ZAHAB: свежий отжим из дикого ливийского трюфеля. Флакон 10 мл — курс 1–1,5 месяца. Заказ в WhatsApp и Telegram.">
 <link rel="preload" as="image" href="assets/img/intro.jpg">
 <link rel="preload" as="image" href="assets/img/logo.png">
 <link rel="icon" href="assets/img/favicon.png" type="image/png">
@@ -202,6 +202,7 @@
       <a href="#conditions">Показания</a>
       <a href="#process">Как добываем</a>
       <a href="#usage">Применение</a>
+      <a href="#certificates">Сертификаты</a>
       <a href="#shop">Купить</a>
       <a href="#reviews">Отзывы</a>
       <a href="#contacts">Контакты</a>
@@ -224,10 +225,11 @@
     <a href="#conditions"><span>02</span> Показания</a>
     <a href="#process"><span>03</span> Как добываем</a>
     <a href="#usage"><span>04</span> Применение</a>
-    <a href="#shop"><span>05</span> Купить</a>
-    <a href="#reviews"><span>06</span> Отзывы</a>
-    <a href="#map"><span>07</span> Карта</a>
-    <a href="#contacts"><span>08</span> Контакты</a>
+    <a href="#certificates"><span>05</span> Сертификаты</a>
+    <a href="#shop"><span>06</span> Купить</a>
+    <a href="#reviews"><span>07</span> Отзывы</a>
+    <a href="#map"><span>08</span> Карта</a>
+    <a href="#contacts"><span>09</span> Контакты</a>
   </nav>
   <div class="mobile-menu__foot" id="mobileMenuFoot"></div>
 </div>
@@ -359,6 +361,18 @@
     <ol class="steps" id="useSteps"></ol>
 
     <div class="usage__reaction reveal" id="useReaction"></div>
+  </div>
+</section>
+
+<!-- ================= СЕРТИФИКАТЫ ================= -->
+<section class="section" id="certificates">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">документы</p>
+      <h2 id="certTitle"></h2>
+      <p class="section__lead" id="certLead"></p>
+    </header>
+    <div class="certs" id="certGrid"></div>
   </div>
 </section>
 
@@ -605,9 +619,24 @@
     setTimeout(function(){ if (intro.parentNode) intro.parentNode.removeChild(intro); }, 1000);
   }
 
+  // Фото заставки должно быть загружено целиком: на медленном мобильном интернете
+  // оно прорисовывалось полосами сверху вниз прямо во время анимации.
+  // Ждём его не дольше 2,5 с — дальше стартуем как есть, чтобы не держать чёрный экран.
+  var photoReady = false;
+  (function(){
+    var img = new Image();
+    var done = function(){ if (photoReady) return; photoReady = true; play(); };
+    img.onload = function(){ (img.decode ? img.decode() : Promise.resolve()).then(done, done); };
+    img.onerror = done;
+    img.src = 'assets/img/intro.jpg';
+    if (img.complete && img.naturalWidth) done();
+    setTimeout(done, 2500);
+  })();
+
   // анимация стартует только когда вкладка реально видима
   function play(){
     if (startedAt) return;
+    if (!photoReady) return;
     if (document.visibilityState !== 'visible') return;
     startedAt = Date.now();
     intro.classList.add('is-playing');
