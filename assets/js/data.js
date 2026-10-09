@@ -262,7 +262,7 @@ window.SITE = {
       id: 'zahab-3',
       title: 'Полный курс',
       subtitle: '3 флакона · 30 мл',
-      price: 7500,
+      price: 6900,
       old: null,
       badge: 'Для длительных курсов',
       note: 'Хватает на 4–4,5 месяца',
