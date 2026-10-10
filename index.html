@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0d0a07">
 <title>ZAHAB — сок пустынного трюфеля кам’а для глаз | прямой производитель</title>
-<meta name="description" content="Сок пустынного трюфеля кам’а ZAHAB: свежий отжим из дикого ливийского трюфеля. Флакон 10 мл — курс 1–1,5 месяца. Заказ в WhatsApp и Telegram.">
+<meta name="description" content="Сок пустынного трюфеля кам’а ZAHAB: свежий отжим из дикого ливийского трюфеля. Флакон 9 мл. Заказ в WhatsApp и Telegram.">
 <link rel="preload" as="image" href="assets/img/intro.jpg">
 <link rel="preload" as="image" href="assets/img/logo.png">
 <link rel="icon" href="assets/img/favicon.png" type="image/png">
@@ -202,6 +202,7 @@
       <a href="#conditions">Показания</a>
       <a href="#process">Как добываем</a>
       <a href="#usage">Применение</a>
+      <a href="#maker">О нас</a>
       <a href="#certificates">Сертификаты</a>
       <a href="#shop">Купить</a>
       <a href="#reviews">Отзывы</a>
@@ -225,11 +226,12 @@
     <a href="#conditions"><span>02</span> Показания</a>
     <a href="#process"><span>03</span> Как добываем</a>
     <a href="#usage"><span>04</span> Применение</a>
-    <a href="#certificates"><span>05</span> Сертификаты</a>
-    <a href="#shop"><span>06</span> Купить</a>
-    <a href="#reviews"><span>07</span> Отзывы</a>
-    <a href="#map"><span>08</span> Карта</a>
-    <a href="#contacts"><span>09</span> Контакты</a>
+    <a href="#maker"><span>05</span> О производителе</a>
+    <a href="#certificates"><span>06</span> Сертификаты</a>
+    <a href="#shop"><span>07</span> Купить</a>
+    <a href="#reviews"><span>08</span> Отзывы</a>
+    <a href="#map"><span>09</span> Карта</a>
+    <a href="#contacts"><span>10</span> Контакты</a>
   </nav>
   <div class="mobile-menu__foot" id="mobileMenuFoot"></div>
 </div>
@@ -264,10 +266,10 @@
 
     <div class="hero__card" id="heroCard">
       <div class="hero__cardGlow" aria-hidden="true"></div>
-      <img src="assets/img/shot-bottles.jpg" alt="Флаконы сока трюфеля ZAHAB, 10 мл" loading="eager">
+      <img src="assets/img/shot-bottles.jpg" alt="Флаконы сока трюфеля ZAHAB, 9 мл" loading="eager">
       <div class="hero__price">
         <b>2500 ₽</b>
-        <i>флакон 10 мл · курс 1–1,5 мес.</i>
+        <i>флакон 9 мл</i>
       </div>
     </div>
   </div>
@@ -279,6 +281,13 @@
 <section class="hadith" id="hadith">
   <div class="girih" aria-hidden="true"></div>
   <div class="wrap hadith__inner reveal">
+    <p class="hadith__kicker">В Коране и Сунне</p>
+    <p class="hadith__intro" id="hadithIntro"></p>
+    <p class="hadith__ar hadith__ar--ayah" id="ayahAr"></p>
+    <p class="hadith__tr" id="ayahTr"></p>
+    <p class="hadith__src" id="ayahSrc"></p>
+    <div class="hadith__sep" aria-hidden="true"></div>
+    <p class="hadith__lead" id="hadithLead"></p>
     <p class="hadith__ar" id="hadithAr"></p>
     <p class="hadith__tr" id="hadithTr"></p>
     <p class="hadith__src" id="hadithSrc"></p>
@@ -364,6 +373,21 @@
   </div>
 </section>
 
+<!-- ================= ПРОИЗВОДИТЕЛЬ ================= -->
+<section class="section section--dark" id="maker">
+  <div class="girih girih--soft" aria-hidden="true"></div>
+  <div class="wrap maker">
+    <div class="maker__text reveal">
+      <p class="eyebrow">о нас</p>
+      <h2 id="makerTitle"></h2>
+      <p class="section__lead" id="makerLead"></p>
+      <div id="makerBody"></div>
+      <ul class="maker__facts" id="makerFacts"></ul>
+    </div>
+    <figure class="maker__photo reveal"><img id="makerImg" alt="" loading="lazy"></figure>
+  </div>
+</section>
+
 <!-- ================= СЕРТИФИКАТЫ ================= -->
 <section class="section" id="certificates">
   <div class="wrap">
@@ -372,6 +396,7 @@
       <h2 id="certTitle"></h2>
       <p class="section__lead" id="certLead"></p>
     </header>
+    <ul class="cert__facts reveal" id="certFacts"></ul>
     <div class="certs" id="certGrid"></div>
   </div>
 </section>
@@ -401,6 +426,8 @@
       <h2 id="revTitle"></h2>
       <p class="section__lead" id="revLead"></p>
     </header>
+    <div class="rev__tabs reveal" id="revTabs" role="group" aria-label="Отзывы по заболеваниям"></div>
+    <h3 class="rev__group" id="revGroup" hidden></h3>
   </div>
 
   <div class="rev">
@@ -541,7 +568,7 @@
       </label>
       <label class="field">
         <span id="lblContact"></span>
-        <input type="text" id="fCity" name="city" maxlength="80" placeholder="Например: Уфа, нужен курс на 2 месяца">
+        <input type="text" id="fCity" name="city" maxlength="80" placeholder="Например: Уфа, 2 флакона">
       </label>
       <label class="field">
         <span id="lblComment"></span>

@@ -58,6 +58,14 @@ function renderHero(){
 }
 
 function renderHadith(){
+  var hd = S.hadith;
+  $('#hadithIntro').textContent = hd.intro || '';
+  if (hd.ayah){
+    $('#ayahAr').textContent  = hd.ayah.arabic;
+    $('#ayahTr').textContent  = hd.ayah.translation;
+    $('#ayahSrc').textContent = hd.ayah.source;
+  }
+  $('#hadithLead').textContent = hd.lead || '';
   $('#hadithAr').textContent = S.hadith.arabic;
   $('#hadithTr').textContent = S.hadith.translation;
   $('#hadithSrc').textContent = S.hadith.source;
@@ -134,7 +142,7 @@ function renderShop(){
       '<div class="card__body">' +
         '<h3>' + p.title + '</h3>' +
         '<p class="card__sub">' + p.subtitle + '</p>' +
-        '<p class="card__note">' + p.note + '</p>' +
+        (p.note ? '<p class="card__note">' + p.note + '</p>' : '') +
         '<div class="card__foot">' +
           '<span class="card__price">' + money(p.price) + '</span>' +
           '<div class="card__ctrl" data-ctrl="' + p.id + '"></div>' +
@@ -151,17 +159,46 @@ function renderShop(){
   paintProductButtons();
 }
 
+/* Отзывы сгруппированы по заболеваниям: кнопки-разделы над лентой строятся из tags */
+var revFilter = '';
+
+function reviewTags(){
+  var list = [];
+  S.reviews.items.forEach(function(r){
+    (r.tags || []).forEach(function(t){ if (list.indexOf(t) < 0) list.push(t); });
+  });
+  return list;
+}
+
 function renderReviews(){
   $('#revTitle').textContent = S.reviews.title;
   $('#revLead').textContent  = S.reviews.lead;
-  $('#revTrack').innerHTML = S.reviews.items.map(function(r){
+  var tags = reviewTags();
+  var count = function(t){ return S.reviews.items.filter(function(r){ return (r.tags || []).indexOf(t) >= 0; }).length; };
+  $('#revTabs').innerHTML =
+    '<button type="button" class="rev__tab on" data-tag="">Все отзывы <i>' + S.reviews.items.length + '</i></button>' +
+    tags.map(function(t){
+      return '<button type="button" class="rev__tab" data-tag="' + t + '">' + t + ' <i>' + count(t) + '</i></button>';
+    }).join('');
+  paintReviews();
+}
+
+function paintReviews(){
+  var list = S.reviews.items.filter(function(r){ return !revFilter || (r.tags || []).indexOf(revFilter) >= 0; });
+  $('#revGroup').textContent = revFilter;
+  $('#revGroup').hidden = !revFilter;
+  $('#revTrack').innerHTML = list.map(function(r){
     return '<article class="rev__item">' +
-      '<div class="rev__quote">“</div>' +
-      '<p class="rev__text">' + r.text + '</p>' +
+      ((r.tags || []).length ? '<div class="rev__tags">' + r.tags.map(function(t){ return '<span>' + t + '</span>'; }).join('') + '</div>' : '<div class="rev__quote">“</div>') +
+      (r.audio ? '<div class="rev__voice"><b>Голосовой отзыв</b><audio controls preload="none" src="' + r.audio + '"></audio></div>' : '') +
+      (r.text ? '<p class="rev__text">' + r.text + '</p>' : '') +
       '<div class="rev__author"><div class="rev__ava">' + r.author.charAt(0) + '</div>' +
       '<div><b>' + r.author + '</b><span>' + r.source + '</span></div></div>' +
     '</article>';
   }).join('');
+  $('#revTrack').scrollLeft = 0;
+  $$('#revTabs .rev__tab').forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-tag') === revFilter); });
+  document.dispatchEvent(new CustomEvent('reviews:painted'));
 }
 
 function renderGallery(){
@@ -175,12 +212,24 @@ function renderGallery(){
   $('#tgChannelBtn').href = tgLink();
 }
 
+function renderMaker(){
+  var m = S.maker;
+  if (!m) return;
+  $('#makerTitle').textContent = m.title;
+  $('#makerLead').textContent  = m.lead;
+  $('#makerBody').innerHTML = m.paragraphs.map(function(p){ return '<p>' + p + '</p>'; }).join('');
+  $('#makerFacts').innerHTML = (m.facts || []).map(function(f){ return '<li><b>' + f.value + '</b><span>' + f.label + '</span></li>'; }).join('');
+  $('#makerImg').src = m.image;
+  $('#makerImg').alt = m.title;
+}
+
 /* сертификаты: лист-превью на «бумаге», по нажатию — просмотр всех листов подряд */
 function renderCerts(){
   var c = S.certificates;
   if (!c) return;
   $('#certTitle').textContent = c.title;
   $('#certLead').textContent  = c.lead;
+  $('#certFacts').innerHTML = (c.facts || []).map(function(f){ return '<li>' + f + '</li>'; }).join('');
   var n = 0;
   $('#certGrid').innerHTML = c.items.map(function(d, i){
     var first = n;
@@ -236,6 +285,9 @@ function renderContacts(){
       WA_ICON + '<div><b>WhatsApp ' + c.whatsappRu.label + '</b><span>' + c.whatsappRu.note + '</span></div></a>' +
     '<a class="cta__link" href="' + tgLink() + '" target="_blank" rel="noopener">' +
       TG_ICON + '<div><b>Telegram ' + c.telegram.label + '</b><span>канал и заказы</span></div></a>' +
+    (c.email ? '<a class="cta__link" href="mailto:' + c.email.address + '">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>' +
+      '<div><b>' + c.email.address + '</b><span>' + c.email.note + '</span></div></a>' : '') +
     '<button class="cta__link" type="button" data-open-order style="text-align:left;cursor:pointer;width:100%">' +
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v11H8l-4 4V5Z"/></svg>' +
       '<div><b>Оставить заявку</b><span>соберём текст — отправите одним сообщением</span></div></button>';
@@ -245,7 +297,8 @@ function renderContacts(){
   $('#footLinks').innerHTML =
     '<a href="' + waLink(c.whatsappMain.phone) + '" target="_blank" rel="noopener">WhatsApp ' + c.whatsappMain.label + '</a>' +
     '<a href="' + waLink(c.whatsappRu.phone) + '" target="_blank" rel="noopener">WhatsApp ' + c.whatsappRu.label + '</a>' +
-    '<a href="' + tgLink() + '" target="_blank" rel="noopener">Telegram ' + c.telegram.label + '</a>';
+    '<a href="' + tgLink() + '" target="_blank" rel="noopener">Telegram ' + c.telegram.label + '</a>' +
+    (c.email ? '<a href="mailto:' + c.email.address + '">' + c.email.address + '</a>' : '');
 
   $('#footBrandNote').textContent = S.brand.meaning + '. ' + S.brand.subtitle;
   $('#disclaimerText').textContent = S.disclaimer;
@@ -592,7 +645,7 @@ function initReviews(){
     return first ? first.offsetWidth + 20 : 400;
   }
   function perView(){ return Math.max(1, Math.round(track.clientWidth / step())); }
-  function pages(){ return Math.max(1, Math.ceil(S.reviews.items.length / perView())); }
+  function pages(){ return Math.max(1, Math.ceil(track.children.length / perView())); }
   function page(){ return Math.round(track.scrollLeft / (step() * perView())); }
 
   function goPage(i){
@@ -613,6 +666,15 @@ function initReviews(){
     next.disabled = cur >= n - 1;
     dotsBox.hidden = n < 2;
   }
+
+  // раздел-болезнь: перерисовываем ленту и точки под неё
+  $('#revTabs').addEventListener('click', function(e){
+    var b = e.target.closest('[data-tag]');
+    if (!b) return;
+    revFilter = b.getAttribute('data-tag');
+    paintReviews();
+  });
+  document.addEventListener('reviews:painted', function(){ dotsBox.innerHTML = ''; paintDots(); });
 
   prev.addEventListener('click', function(){ goPage(page() - 1); });
   next.addEventListener('click', function(){ goPage(page() + 1); });
@@ -895,6 +957,7 @@ function boot(){
   renderShop();
   renderReviews();
   renderGallery();
+  renderMaker();
   renderCerts();
   renderMap();
   renderFaq();

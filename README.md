@@ -53,7 +53,8 @@ node dev-server.js
 | Телефоны WhatsApp | `contacts.whatsappMain.phone` и `contacts.whatsappRu.phone` — **только цифры**, без «+» и пробелов; `label` — как это показать на сайте |
 | Телеграм | `contacts.telegram.user` |
 | Часы ответа | `contacts.workingHours` |
-| Отзывы | `reviews.items[]` — текст, кто написал, откуда |
+| Отзывы | `reviews.items[]` — текст, кто написал, откуда; `tags` — заболевания (по ним кнопки-разделы над отзывами); `audio: 'assets/audio/файл.mp3'` — голосовой отзыв |
+| О производителе | `maker` — абзацы, факты, фото |
 | Список показаний | `conditions.items[]` |
 | Инструкция по применению | `usage.steps[]` |
 | Вопросы и ответы | `faq.items[]` |

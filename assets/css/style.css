@@ -344,6 +344,11 @@ html.js .hero__card{ opacity: 0; transform: translateY(28px) }
 }
 .hadith__tr{ font: 600 clamp(19px, 2.6vw, 26px)/1.5 var(--serif); color: var(--sand); margin-bottom: 12px }
 .hadith__src{ font-size: 13px; letter-spacing: .08em; color: rgba(244,234,217,.5); margin-bottom: 26px }
+.hadith__kicker{ font: 600 12px/1 var(--sans); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin: 0 0 18px }
+.hadith__intro{ max-width: 52ch; margin: 0 auto 26px; color: rgba(244,234,217,.78); font-size: 16px }
+.hadith__ar--ayah{ font-size: clamp(22px, 3.2vw, 32px) !important; line-height: 1.9 !important }
+.hadith__sep{ width: 120px; height: 1px; margin: 6px auto 30px; background: linear-gradient(90deg, transparent, var(--gold), transparent) }
+.hadith__lead{ font: 600 clamp(16px, 2vw, 19px)/1.5 var(--serif); color: rgba(244,234,217,.8); margin: 0 0 14px }
 .hadith__note{ max-width: 46ch; margin: 0 auto; color: rgba(244,234,217,.72); font-size: 15px }
 
 /* ==========================================================
@@ -359,7 +364,7 @@ html.js .hero__card{ opacity: 0; transform: translateY(28px) }
 .section > .wrap{ position: relative; z-index: 2 }
 
 /* --- о кам'а --- */
-.about__grid{ display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 72px }
+.about__grid{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 72px }
 .about__card{
   position: relative; padding: 30px 26px 28px; border-radius: var(--r);
   background: #fff; border: 1px solid rgba(196,152,86,.24);
@@ -579,6 +584,23 @@ html.js .hero__card{ opacity: 0; transform: translateY(28px) }
 .rev__arrow:hover{ background: rgba(217,164,65,.18); transform: translateY(-2px) }
 .rev__arrow svg{ width: 20px; height: 20px }
 .rev__arrow[disabled]{ opacity: .3; cursor: default; transform: none; background: transparent }
+/* разделы-болезни над отзывами */
+.rev__tabs{ display: flex; flex-wrap: wrap; gap: 10px; margin: -6px 0 26px }
+.rev__tab{
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px 18px;
+  border-radius: 999px; border: 1px solid rgba(93,64,32,.22); background: #fff; cursor: pointer;
+  font: 600 15px/1.2 var(--sans); color: var(--text); transition: background .3s ease, color .3s ease, border-color .3s ease;
+}
+.rev__tab i{ font-style: normal; font-size: 12px; color: var(--muted); padding: 2px 7px; border-radius: 999px; background: rgba(217,164,65,.14) }
+.rev__tab:hover{ border-color: var(--gold) }
+.rev__tab.on{ background: var(--ink); color: var(--sand); border-color: var(--ink) }
+.rev__tab.on i{ background: rgba(217,164,65,.28); color: var(--gold-l) }
+.rev__group{ font: 700 clamp(26px, 4vw, 36px)/1.1 var(--serif); margin: 0 0 18px; color: var(--text) }
+.rev__tags{ display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px }
+.rev__tags span{ font: 600 12px/1 var(--sans); padding: 6px 10px; border-radius: 999px; background: rgba(217,164,65,.16); color: var(--gold-d) }
+.rev__voice{ margin-bottom: 14px }
+.rev__voice b{ display: block; font: 600 13px/1 var(--sans); color: var(--muted); margin-bottom: 8px }
+.rev__voice audio{ width: 100%; height: 40px }
 .rev__dots{ display: flex; gap: 7px }
 .rev__dots i{
   width: 7px; height: 7px; border-radius: 50%; background: rgba(93,64,32,.25);
@@ -590,8 +612,27 @@ html.js .hero__card{ opacity: 0; transform: translateY(28px) }
   font: 500 13px/1 var(--sans); color: var(--muted);
 }
 
+/* --- производитель --- */
+#maker{ position: relative; overflow: hidden }
+.maker{ position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center }
+.maker__text p{ color: rgba(244,234,217,.82) }
+#maker .section__lead{ margin-bottom: 22px; color: var(--gold-l) }
+#makerBody p{ margin: 0 0 14px; font-size: 16.5px; line-height: 1.7 }
+.maker__facts{ list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-wrap: wrap; gap: 14px }
+.maker__facts li{ flex: 1 1 200px; padding: 16px 18px; border: 1px solid rgba(217,164,65,.3); border-radius: 14px }
+.maker__facts b{ display: block; font: 700 26px/1 var(--serif); color: var(--gold-l); margin-bottom: 6px }
+.maker__facts span{ font-size: 13.5px; color: rgba(244,234,217,.7) }
+.maker__photo{ margin: 0; border-radius: 22px; overflow: hidden; aspect-ratio: 4/5; box-shadow: 0 30px 70px rgba(0,0,0,.45) }
+.maker__photo img{ width: 100%; height: 100%; object-fit: cover }
+
 /* --- сертификаты: сканы как белые листы, в том виде, в каком выданы --- */
 .certs{ display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 28px 22px }
+.cert__facts{ list-style: none; padding: 0; margin: -6px 0 30px; display: flex; flex-wrap: wrap; gap: 10px }
+.cert__facts li{
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px;
+  background: #fff; border: 1px solid rgba(196,152,86,.3); font: 600 14px/1.2 var(--sans); color: var(--text);
+}
+.cert__facts li::before{ content: '✓'; color: var(--gold-d); font-weight: 700 }
 .cert{ margin: 0; cursor: pointer; outline: none }
 .cert__sheet{
   position: relative; aspect-ratio: 210/297; background: #fff; border-radius: 4px; overflow: hidden;
@@ -867,6 +908,9 @@ body.lb-open .header{ opacity: 0; pointer-events: none }  /* и шапка то�
    ========================================================== */
 @media (max-width: 1080px){
   .about__grid{ grid-template-columns: repeat(2,1fr) }
+  .about__card:nth-child(3):last-child{ grid-column: span 2 }
+  .maker{ grid-template-columns: 1fr; gap: 32px }
+  .maker__photo{ max-width: 520px; aspect-ratio: 4/3 }
   .gal{ grid-template-columns: repeat(3,1fr) }
   .rev__track{ grid-auto-columns: calc((100% - 20px) / 2) }
   .shop__grid{ grid-template-columns: repeat(2,1fr) }
@@ -895,6 +939,10 @@ body.lb-open .header{ opacity: 0; pointer-events: none }  /* и шапка то�
 }
 
 @media (max-width: 720px){
+  /* разделы отзывов на телефоне — одной лентой, листаются пальцем */
+  .rev__tabs{ flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-right: -20px; padding-right: 20px }
+  .rev__tabs::-webkit-scrollbar{ display: none }
+  .rev__tab{ flex: none; font-size: 14px; padding: 9px 15px }
   /* цели для пальца не меньше 44 px */
   .card__add{ min-height: 44px }
   #mapLink{ display: inline-flex; align-items: center; min-height: 44px }
@@ -925,6 +973,7 @@ body.lb-open .header{ opacity: 0; pointer-events: none }  /* и шапка то�
   .rev__hint{ display: block }
   .dock{ display: flex }
   .about__grid{ grid-template-columns: 1fr; gap: 14px }
+  .about__card:nth-child(3):last-child{ grid-column: auto }
   .steps li{ grid-template-columns: 48px 1fr; gap: 16px; padding: 20px 20px }
   .steps b{ width: 42px; height: 42px; font-size: 18px }
   .modal{ padding: 0; align-items: flex-end }
