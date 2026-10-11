@@ -167,7 +167,11 @@ function reviewTags(){
   S.reviews.items.forEach(function(r){
     (r.tags || []).forEach(function(t){ if (list.indexOf(t) < 0) list.push(t); });
   });
-  return list;
+  var order = S.reviews.tagOrder || [];
+  return list.sort(function(a, b){
+    var ia = order.indexOf(a), ib = order.indexOf(b);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
 }
 
 function renderReviews(){
@@ -191,7 +195,7 @@ function paintReviews(){
     return '<article class="rev__item">' +
       ((r.tags || []).length ? '<div class="rev__tags">' + r.tags.map(function(t){ return '<span>' + t + '</span>'; }).join('') + '</div>' : '<div class="rev__quote">“</div>') +
       (r.audio ? '<div class="rev__voice"><b>Голосовой отзыв</b><audio controls preload="none" src="' + r.audio + '"></audio></div>' : '') +
-      (r.text ? '<p class="rev__text">' + r.text + '</p>' : '') +
+      (r.text ? '<p class="rev__text' + (r.audio ? ' rev__text--voice' : '') + '">' + r.text + '</p>' : '') +
       '<div class="rev__author"><div class="rev__ava">' + r.author.charAt(0) + '</div>' +
       '<div><b>' + r.author + '</b><span>' + r.source + '</span></div></div>' +
     '</article>';
@@ -655,7 +659,15 @@ function initReviews(){
 
   function paintDots(){
     var n = pages();
-    if (dotsBox.children.length !== n){
+    // страниц много — вместо ряда точек показываем счётчик «3 / 14»
+    if (n > 8){
+      dotsBox.innerHTML = '<span class="rev__count">' + (page() + 1) + ' / ' + n + '</span>';
+      prev.disabled = page() <= 0;
+      next.disabled = page() >= n - 1;
+      dotsBox.hidden = false;
+      return;
+    }
+    if (dotsBox.children.length !== n || dotsBox.querySelector('.rev__count')){
       var html = '';
       for (var i = 0; i < n; i++) html += '<i data-page="' + i + '" role="button" tabindex="0" aria-label="Отзывы, страница ' + (i + 1) + '"></i>';
       dotsBox.innerHTML = html;
@@ -673,6 +685,9 @@ function initReviews(){
     if (!b) return;
     revFilter = b.getAttribute('data-tag');
     paintReviews();
+    // выбранный раздел — в центр ленты кнопок (на телефоне она листается вбок)
+    var tabs = $('#revTabs');
+    tabs.scrollTo({ left: b.offsetLeft - (tabs.clientWidth - b.offsetWidth) / 2, behavior: reduced ? 'auto' : 'smooth' });
   });
   document.addEventListener('reviews:painted', function(){ dotsBox.innerHTML = ''; paintDots(); });
 

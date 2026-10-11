@@ -601,6 +601,8 @@ html.js .hero__card{ opacity: 0; transform: translateY(28px) }
 .rev__voice{ margin-bottom: 14px }
 .rev__voice b{ display: block; font: 600 13px/1 var(--sans); color: var(--muted); margin-bottom: 8px }
 .rev__voice audio{ width: 100%; height: 40px }
+.rev__text--voice::before{ content: 'Расшифровка: '; font-weight: 600; color: var(--muted) }
+.rev__count{ font: 600 14px/1 var(--sans); color: var(--muted); letter-spacing: .06em; min-width: 64px; text-align: center }
 .rev__dots{ display: flex; gap: 7px }
 .rev__dots i{
   width: 7px; height: 7px; border-radius: 50%; background: rgba(93,64,32,.25);
