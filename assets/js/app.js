@@ -968,7 +968,6 @@ function boot(){
   renderAbout();
   renderConditions();
   renderProcess();
-  renderUsage();
   renderShop();
   renderReviews();
   renderGallery();
